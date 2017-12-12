@@ -155,6 +155,35 @@ exports.getFbHookApi = function(req) {
     return new Promise((resolve, reject)=> {
         console.log(req.body.id);
         //responseStruct.create_response(JSON.stringify(req.body.id));
-        resolve(responseStruct.create_response(req.body.id));
+        let user_id = req.body.id;
+        let info = getUserinfo(user_id);
+        resolve(responseStruct.create_response(info));
     });
 }
+let getUserinfo = (userid)=> {
+    let page_access_token = 'EAACwD8kT8KwBAH14ZAu3U8zUcWuJ4ga3hawR3PG8BSP9qwLPIyhBNd4s8odozwddYn72fUOXBB32y1kIgVsY6h2C5DJv6ZAiPjFIt5OovZB6gGdncFGseZCU5sZCZB7rL91sJx41qjC9zHChv6IKDuJJR20ZCyynd5j5drcUZA3gXgZDZD';
+    let url = 'https://graph.facebook.com/v2.6/' + userid +'?fields=first_name,last_name,profile_pic&access_token=' + page_access_token;
+    
+    const options = {
+        url: url,
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Accept-Charset': 'utf-8'
+        }
+    };
+
+    request(options, (err, res, body)=> {
+        let json = JSON.parse(body);
+        console.log(json);
+        console.log(JSON.parse(res));
+        console.log(err);
+
+        if(err) {
+            return err;
+        }
+        else {            
+            return body;
+        }
+    });
+};
